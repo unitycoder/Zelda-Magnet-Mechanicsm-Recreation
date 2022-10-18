@@ -1,8 +1,8 @@
 ﻿using System;
-using InputSystem;
+using Core.InputSystem;
 using UnityEngine;
 
-namespace CharacterScripts
+namespace CharacterSystem
 {
     public class PlayerInputController : MonoBehaviour
     {

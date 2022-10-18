@@ -1,6 +1,6 @@
-﻿using FSM;
+﻿using Core.FSM;
 
-namespace CharacterScripts
+namespace CharacterSystem
 {
     public class CharacterFSMTransitionMessage : FSMTransitionMessage
     {

@@ -1,4 +1,4 @@
-﻿using FSM;
+﻿using Core.FSM;
 using System.Collections.Generic;
 
 namespace MagnetSystem.MagnetFSM

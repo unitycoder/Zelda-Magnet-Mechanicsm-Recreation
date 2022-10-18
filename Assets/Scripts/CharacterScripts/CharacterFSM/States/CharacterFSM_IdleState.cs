@@ -1,9 +1,9 @@
-﻿using Common.Animation;
-using FSM;
+﻿using Core.Common.Animation;
+using Core.FSM;
 using UnityEngine;
 using Util;
 
-namespace CharacterScripts.Movement
+namespace CharacterSystem
 {
     public class CharacterFSM_IdleState : FSMState<ECharacterState, CharacterFSMTransitionMessage>
     {

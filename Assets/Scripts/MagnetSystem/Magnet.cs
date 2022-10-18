@@ -18,7 +18,7 @@ namespace MagnetSystem
         private Vector3 _velocity;
 
         private IEnumerator _positionProgress;
-            
+        
         public async void AttachMagneticObject(IMagneticObject magneticObject)
         {
             DeattachMagneticObject();
@@ -42,22 +42,22 @@ namespace MagnetSystem
                 return;
             }
 
-            if (Input.GetKey(KeyCode.Alpha1))
+            if (Input.GetKey(KeyCode.J))
             {
                 UpdateTargetPosition(Vector3.left);
             }
 
-            if (Input.GetKey(KeyCode.Alpha2))
+            if (Input.GetKey(KeyCode.L))
             {
                 UpdateTargetPosition(Vector3.right);
             }
             
-            if (Input.GetKey(KeyCode.Alpha3))
+            if (Input.GetKey(KeyCode.I))
             {
                 UpdateTargetPosition(Vector3.up);
             }
 
-            if (Input.GetKey(KeyCode.Alpha4))
+            if (Input.GetKey(KeyCode.K))
             {
                 UpdateTargetPosition(Vector3.down);
             }

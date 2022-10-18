@@ -1,10 +1,10 @@
-﻿using FSM;
+﻿using Core.FSM;
 using UnityEngine;
-using Common;
-using Common.Animation;
+using Core.Common;
+using Core.Common.Animation;
 using Util;
 
-namespace CharacterScripts.Movement
+namespace CharacterSystem
 {
     public class CharacterFSM_MovementState : FSMState<ECharacterState, CharacterFSMTransitionMessage>
     {

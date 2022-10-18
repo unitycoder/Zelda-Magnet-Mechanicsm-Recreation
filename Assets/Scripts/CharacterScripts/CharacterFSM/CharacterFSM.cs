@@ -1,7 +1,7 @@
-﻿using FSM;
+﻿using Core.FSM;
 using System.Collections.Generic;
 
-namespace CharacterScripts
+namespace CharacterSystem
 {
     public enum ECharacterState
     {
