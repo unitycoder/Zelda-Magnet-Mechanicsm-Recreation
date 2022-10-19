@@ -1,4 +1,7 @@
-﻿using Core.FSM;
+﻿using Core.CameraSystem;
+using Core.FSM;
+using Core.ServiceSystem;
+using Util;
 
 namespace MagnetSystem.MagnetFSM
 {
@@ -7,6 +10,13 @@ namespace MagnetSystem.MagnetFSM
         public override EMagnetState GetStateType()
         {
             return EMagnetState.Idle;
+        }
+
+        protected override void EnterStateCustomActions(MagnetFSMTransitionMessage transitionMessage = null)
+        {
+            ServiceProvider.Get<CameraManager>().SetTransition(Constants.DefaultCamera);
+            
+            base.EnterStateCustomActions(transitionMessage);
         }
     }
 }

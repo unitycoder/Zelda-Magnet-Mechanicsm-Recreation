@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using Core.ServiceSystem;
 using Cysharp.Threading.Tasks;
 
 namespace MagnetSystem
@@ -44,22 +45,22 @@ namespace MagnetSystem
 
             if (Input.GetKey(KeyCode.J))
             {
-                UpdateTargetPosition(Vector3.left);
+                UpdateTargetPosition(-transform.right);
             }
 
             if (Input.GetKey(KeyCode.L))
             {
-                UpdateTargetPosition(Vector3.right);
+                UpdateTargetPosition(transform.right);
             }
             
             if (Input.GetKey(KeyCode.I))
             {
-                UpdateTargetPosition(Vector3.up);
+                UpdateTargetPosition(transform.up);
             }
 
             if (Input.GetKey(KeyCode.K))
             {
-                UpdateTargetPosition(Vector3.down);
+                UpdateTargetPosition(-transform.up);
             }
         }
 

@@ -1,5 +1,5 @@
-﻿using Core.FSM;
-using Util;
+﻿using Util;
+using Core.FSM;
 using UnityEngine;
 using System.Collections;
 
@@ -10,7 +10,7 @@ namespace MagnetSystem.MagnetFSM
         [SerializeField] private MagnetFSM _magnetFSM = null;
 
         [SerializeField] private float _maxDistance = 5f;
-        
+
         private IEnumerator _magneticObjectSearchRoutine;
         
         public override EMagnetState GetStateType()
@@ -90,8 +90,6 @@ namespace MagnetSystem.MagnetFSM
                 {
                     if (Input.GetMouseButtonUp(Constants.MagnetObjectTriggerMouseButton))
                     {
-                        Debug.Log("Found Magnetic Object !");
-                        
                         _magnetFSM.TryChangeState(EMagnetState.Holding,
                             new MagnetFSMHoldingTransitionMessage(magneticObject));
                     }

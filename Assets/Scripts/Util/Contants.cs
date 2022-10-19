@@ -2,7 +2,7 @@
 
 namespace Util
 {
-    public class Constants
+    public partial class Constants
     {
         public const KeyCode MagnetActivationKeyCode = KeyCode.Q;
 

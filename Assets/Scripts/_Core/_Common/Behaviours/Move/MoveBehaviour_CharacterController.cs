@@ -2,7 +2,7 @@
 
 namespace Core.Common
 {
-    public class MoveBehaviour_CharacterController : MonoBehaviour
+    public class MoveBehaviour_CharacterController : MonoBehaviour, IMovementBehaviour
     {
         [SerializeField] private CharacterController _characterController = null;
 
