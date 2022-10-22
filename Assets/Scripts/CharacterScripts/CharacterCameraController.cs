@@ -1,3 +1,4 @@
+using System;
 using Core.Common;
 using UnityEngine;
 
@@ -22,6 +23,8 @@ namespace CharacterSystem
         private Vector2 _prevMousePos = Vector2.zero;
 
         private Quaternion _nextRotation;
+        
+        public Action<Vector2> OnMouseInputPerformed { get; set; }
         
         public void EnableCharacterRotation(bool enabled)
         {

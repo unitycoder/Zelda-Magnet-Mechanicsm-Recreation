@@ -17,8 +17,7 @@ namespace MagnetSystem
         private Vector3 _velocity;
         private Vector3 _targetPosition;
 
-        private Vector3 _previousMagnetPosition;
-        private Quaternion _previousMagnetRotation;
+        private float _distanceToCamera;
         
         private IEnumerator _positionProgress;
         
@@ -26,10 +25,10 @@ namespace MagnetSystem
         {
             DeattachMagneticObject();
 
-            _magneticObject = magneticObject;
-
             await AttachingToMagneticObject();
 
+            _magneticObject = magneticObject;
+            
             AttachedToMagneticObject();
         }
 
@@ -37,7 +36,7 @@ namespace MagnetSystem
         {
             _magneticObject = null;
         }
-
+        
         private void Update()
         {
             if (_magneticObject == null)
@@ -69,12 +68,15 @@ namespace MagnetSystem
 
             #endregion
 
-            /*
-            Vector3 deltaAngles = transform.rotation.eulerAngles - _previousMagnetRotation.eulerAngles;
-            Vector3 deltaMagPos = _magneticObject.Transform.position - transform.position;
-            Vector3 newDelta = Quaternion.Inverse(Quaternion.Euler(deltaAngles)) * deltaMagPos;
-            _targetPosition += newDelta;
-            */
+            Vector3 origin = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
+
+            Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+            
+            Vector3 targetPos = origin + _distanceToCamera * ray.direction.normalized;
+
+            Vector3 deltaPos = targetPos - _magneticObject.Transform.position;
+            
+            UpdateTargetPositionDeltaSpeed(deltaPos);
         }
 
         private void UpdateTargetPositionDeltaSpeed(Vector3 delta)
@@ -82,26 +84,20 @@ namespace MagnetSystem
             _targetPosition += delta * (_movementSpeed * Time.deltaTime);
         }
 
-        private void ResetMagnetProperties()
-        {
-            _previousMagnetPosition = transform.position;
-            _previousMagnetRotation = transform.rotation;
-        }
-
         private UniTask AttachingToMagneticObject()
         {
-            _targetPosition = _magneticObject.Transform.position;
-
             return UniTask.Delay((int) (_attachingDuration * 1000));
         }
 
         private void AttachedToMagneticObject()
         {
-            ResetMagnetProperties();
+            _distanceToCamera = (_magneticObject.Transform.position - Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0))).magnitude;
             
+            _targetPosition = _magneticObject.Transform.position;
+
             _positionProgress = UpdatePositionProgress();
 
-            StartCoroutine(_positionProgress);
+            StartCoroutine(_positionProgress); 
         }
 
         private IEnumerator UpdatePositionProgress()
