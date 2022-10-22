@@ -12,16 +12,9 @@ namespace MagnetSystem
     {
         [SerializeField] private float _attachingDuration = 0.25f;
 
-        [SerializeField] private float _movementSpeed = 1;
-        
-        [SerializeField] private float _smoothTime = 0.25f;
-        
-        private IMagneticObject _magneticObject;
-    
-        private Vector3 _velocity;
-        private Vector3 _targetPosition;
-
         private float _distanceToCamera;
+
+        private IMagneticObject _magneticObject;
         
         private IEnumerator _positionProgress;
 
@@ -31,15 +24,20 @@ namespace MagnetSystem
         {
             DeattachMagneticObject();
 
-            await AttachingToMagneticObject();
+            await AttachingToMagneticObject(magneticObject);
 
             _magneticObject = magneticObject;
-            
+
             AttachedToMagneticObject();
         }
 
         public void DeattachMagneticObject()
         {
+            if (_magneticObject != null)
+            {
+                _magneticObject.DeattachedFromMagnet();
+            }
+            
             _magneticObject = null;
         }
 
@@ -59,22 +57,22 @@ namespace MagnetSystem
 
             if (Input.GetKey(KeyCode.J))
             {
-                UpdateTargetPositionDeltaSpeed(-transform.right);
+                UpdateMagneticObjectPosition(-transform.right);
             }
 
             if (Input.GetKey(KeyCode.L))
             {
-                UpdateTargetPositionDeltaSpeed(transform.right);
+                UpdateMagneticObjectPosition(transform.right);
             }
             
             if (Input.GetKey(KeyCode.I))
             {
-                UpdateTargetPositionDeltaSpeed(transform.up);
+                UpdateMagneticObjectPosition(transform.up);
             }
 
             if (Input.GetKey(KeyCode.K))
             {
-                UpdateTargetPositionDeltaSpeed(-transform.up);
+                UpdateMagneticObjectPosition(-transform.up);
             }
 
             #endregion
@@ -92,16 +90,18 @@ namespace MagnetSystem
 
             Vector3 deltaPos = targetPos - _magneticObject.Transform.position;
             
-            UpdateTargetPositionDeltaSpeed(deltaPos);
+            UpdateMagneticObjectPosition(deltaPos);
         }
         
-        private void UpdateTargetPositionDeltaSpeed(Vector3 delta)
+        private void UpdateMagneticObjectPosition(Vector3 delta)
         {
-            _targetPosition += delta * (_movementSpeed * Time.deltaTime);
+            _magneticObject.MoveMagneticObject(delta);
         }
 
-        private UniTask AttachingToMagneticObject()
+        private UniTask AttachingToMagneticObject(IMagneticObject magneticObject)
         {
+            magneticObject.AttachingToMagnet(this);
+            
             return UniTask.Delay(TimeSpan.FromSeconds(_attachingDuration));
         }
 
@@ -109,24 +109,8 @@ namespace MagnetSystem
         {
             Vector3 objectPosition = _magneticObject.Transform.position;
             _distanceToCamera = (objectPosition - _cameraManager.MainCamera.ViewportToWorldPoint(Constants.AimPosition)).magnitude;
-            _targetPosition = objectPosition;
-
-            _positionProgress = UpdatePositionProgress();
-
-            StartCoroutine(_positionProgress); 
-        }
-
-        private IEnumerator UpdatePositionProgress()
-        {
-            while (true)
-            {
-                Vector3 currentPosition = _magneticObject.Transform.position;
-
-                _magneticObject.Transform.position =
-                    Vector3.SmoothDamp(currentPosition, _targetPosition, ref _velocity, _smoothTime);
-                
-                yield return null;
-            }
+            
+            _magneticObject.AttachedToMagnet(this);
         }
     }
 }

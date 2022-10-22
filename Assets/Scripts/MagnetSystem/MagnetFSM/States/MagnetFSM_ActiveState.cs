@@ -9,8 +9,6 @@ namespace MagnetSystem.MagnetFSM
 {
     public class MagnetFSM_ActiveState : FSMState<EMagnetState, MagnetFSMTransitionMessage>
     {
-        [SerializeField] private MagnetFSM _magnetFSM = null;
-
         [SerializeField] private float _maxDistance = 5f;
 
         private IEnumerator _magneticObjectSearchRoutine;
@@ -38,18 +36,18 @@ namespace MagnetSystem.MagnetFSM
 
         private void Update()
         {
-            if (_magnetFSM.CurState.GetStateType() != GetStateType() && 
+            if (FSM.CurState.GetStateType() != GetStateType() && 
                 Input.GetKeyUp(Constants.MagnetActivationKeyCode))
             {
-                _magnetFSM.TryChangeState(GetStateType());
+                FSM.TryChangeState(GetStateType());
                 
                 return;
             }
             
-            if (_magnetFSM.CurState.GetStateType() == GetStateType() && 
+            if (FSM.CurState.GetStateType() == GetStateType() && 
                 Input.GetKeyUp(Constants.MagnetActivationKeyCode))
             {
-                _magnetFSM.TryChangeState(EMagnetState.Idle);
+                FSM.TryChangeState(EMagnetState.Idle);
                 
                 return;
             }
@@ -94,7 +92,7 @@ namespace MagnetSystem.MagnetFSM
                 {
                     if (Input.GetMouseButtonUp(Constants.MagnetObjectTriggerMouseButton))
                     {
-                        _magnetFSM.TryChangeState(EMagnetState.Holding,
+                        FSM.TryChangeState(EMagnetState.Holding,
                             new MagnetFSMHoldingTransitionMessage(magneticObject));
                     }
                 }

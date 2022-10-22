@@ -2,6 +2,7 @@
 using Core.Common;
 using Core.FSM;
 using UnityEngine;
+using Util;
 
 namespace MagnetSystem.MagnetFSM
 {
@@ -58,6 +59,15 @@ namespace MagnetSystem.MagnetFSM
             _magnet.DeattachMagneticObject();
             
             base.ExitStateCustomActions();
+        }
+        
+        private void Update()
+        {
+            if (FSM.CurState.GetStateType() == GetStateType() && 
+                Input.GetKeyUp(Constants.MagnetActivationKeyCode))
+            {
+                FSM.TryChangeState(EMagnetState.Idle);
+            }
         }
 
         private void LookTowardsToObject(Vector3 objectPos)
