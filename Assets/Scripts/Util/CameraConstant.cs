@@ -1,6 +1,6 @@
 ﻿namespace Util
 {
-    public partial class Constants
+    public static partial class Constants
     {
         public const string DefaultCamera = "DefaultCamera";
         public const string AimCam = "AimCamera";

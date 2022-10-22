@@ -81,7 +81,7 @@ namespace MagnetSystem.MagnetFSM
         {
             while (true)
             {
-                Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+                Ray ray = Camera.main.ViewportPointToRay(Constants.AimPosition);
 
                 IMagneticObject magneticObject = null;
                 

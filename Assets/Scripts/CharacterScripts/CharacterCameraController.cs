@@ -18,10 +18,11 @@ namespace CharacterSystem
         
         [SerializeField] private float _maxX = 50;
 
-        private float _rotationSpeed = 250;
+        [SerializeField] private float _rotationSpeed = 250;
+        
         private bool _rotateCharacter = false;
         private Vector2 _prevMousePos = Vector2.zero;
-
+        private Vector3 _targetEuler;
         private Quaternion _nextRotation;
         
         public Action<Vector2> OnMouseInputPerformed { get; set; }
@@ -34,6 +35,7 @@ namespace CharacterSystem
         private void Awake()
         {
             _prevMousePos = Input.mousePosition;
+            _targetEuler = _followTransform.rotation.eulerAngles;
         }
 
         private void Update()
@@ -44,23 +46,16 @@ namespace CharacterSystem
 
             Vector2 delta = curMousePos - _prevMousePos;
 
-            if (delta.magnitude <= Mathf.Epsilon)
-            {
-                return;
-            }
-
             delta = delta.normalized;
 
-            Vector3 targetEuler = _followTransform.eulerAngles +
-                                  new Vector3(delta.y, delta.x, 0) * (_rotationSpeed * Time.deltaTime);
-            
-            float angle = targetEuler.x % 360;
-            
+            _targetEuler += new Vector3(delta.y, delta.x, 0);
+            _targetEuler.z = 0;
+            float angle = _targetEuler.x % 360;
+
             if (angle < 0)
             {
                 angle += 360;
             }
-
             if (angle > 180 && angle < 360 + _minX)
             {
                 angle = _minX + 360;
@@ -70,15 +65,15 @@ namespace CharacterSystem
                 angle = _maxX;
             }
 
-            targetEuler.x = angle;
+            _targetEuler.x = angle;
             
-            Quaternion newRotation = Quaternion.Euler(targetEuler);
+            Quaternion newRotation = Quaternion.Euler(_targetEuler);
 
-            _followTransform.rotation = newRotation;
+            _followTransform.rotation = Quaternion.SlerpUnclamped(_followTransform.rotation, newRotation, _rotationSpeed * Time.deltaTime);
             
             if (_rotateCharacter)
             {
-                Vector3 characterTarget = targetEuler;
+                Vector3 characterTarget = _targetEuler;
                 characterTarget.x = 0;
                 
                 _rotationBehaviour.Rotate(characterTarget);

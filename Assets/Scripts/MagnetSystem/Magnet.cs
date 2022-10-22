@@ -1,6 +1,10 @@
+using System;
 using UnityEngine;
 using System.Collections;
+using Core.CameraSystem;
+using Core.ServiceSystem;
 using Cysharp.Threading.Tasks;
+using Util;
 
 namespace MagnetSystem
 {
@@ -20,6 +24,8 @@ namespace MagnetSystem
         private float _distanceToCamera;
         
         private IEnumerator _positionProgress;
+
+        private CameraManager _cameraManager;
         
         public async UniTask AttachMagneticObject(IMagneticObject magneticObject)
         {
@@ -36,7 +42,12 @@ namespace MagnetSystem
         {
             _magneticObject = null;
         }
-        
+
+        private void Awake()
+        {
+            _cameraManager = ServiceProvider.Get<CameraManager>();
+        }
+
         private void Update()
         {
             if (_magneticObject == null)
@@ -68,9 +79,14 @@ namespace MagnetSystem
 
             #endregion
 
-            Vector3 origin = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
+            UpdateMagneticObjectPosition();
+        }
 
-            Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        private void UpdateMagneticObjectPosition()
+        {
+            Vector3 origin = _cameraManager.MainCamera.ViewportToWorldPoint(Constants.AimPosition);
+
+            Ray ray = _cameraManager.MainCamera.ViewportPointToRay(Constants.AimPosition);
             
             Vector3 targetPos = origin + _distanceToCamera * ray.direction.normalized;
 
@@ -78,7 +94,7 @@ namespace MagnetSystem
             
             UpdateTargetPositionDeltaSpeed(deltaPos);
         }
-
+        
         private void UpdateTargetPositionDeltaSpeed(Vector3 delta)
         {
             _targetPosition += delta * (_movementSpeed * Time.deltaTime);
@@ -86,14 +102,14 @@ namespace MagnetSystem
 
         private UniTask AttachingToMagneticObject()
         {
-            return UniTask.Delay((int) (_attachingDuration * 1000));
+            return UniTask.Delay(TimeSpan.FromSeconds(_attachingDuration));
         }
 
         private void AttachedToMagneticObject()
         {
-            _distanceToCamera = (_magneticObject.Transform.position - Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0))).magnitude;
-            
-            _targetPosition = _magneticObject.Transform.position;
+            Vector3 objectPosition = _magneticObject.Transform.position;
+            _distanceToCamera = (objectPosition - _cameraManager.MainCamera.ViewportToWorldPoint(Constants.AimPosition)).magnitude;
+            _targetPosition = objectPosition;
 
             _positionProgress = UpdatePositionProgress();
 

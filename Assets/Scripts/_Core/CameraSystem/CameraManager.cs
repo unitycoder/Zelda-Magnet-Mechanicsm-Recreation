@@ -1,5 +1,4 @@
-﻿using Cinemachine;
-using UnityEngine;
+﻿using UnityEngine;
 using Core.ServiceSystem;
 
 namespace Core.CameraSystem
@@ -8,8 +7,8 @@ namespace Core.CameraSystem
     {
         [SerializeField] private VirtualCamera[] _cameras = null;
 
-        private CinemachineVirtualCameraBase _vcam;
-        
+        public Camera MainCamera { get; private set; }
+
         private const int BACKGROUND_PRIORITY = 5;
         private const int FOREGROUND_PRIORITY = 15;
         
@@ -36,6 +35,11 @@ namespace Core.CameraSystem
                 
                 virtualCamera.SetPriority(priority);
             }
+        }
+
+        private void Awake()
+        {
+            MainCamera = Camera.main;
         }
     }
 }
