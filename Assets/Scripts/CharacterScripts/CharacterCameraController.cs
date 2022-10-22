@@ -20,8 +20,7 @@ namespace CharacterSystem
 
         [SerializeField] private float _rotationSpeed = 250;
         
-        private bool _rotateCharacter = false;
-        private Vector2 _prevMousePos = Vector2.zero;
+        private bool _rotateCharacter = false; 
         private Vector3 _targetEuler;
         private Quaternion _nextRotation;
         
@@ -34,28 +33,30 @@ namespace CharacterSystem
         
         private void Awake()
         {
-            _prevMousePos = Input.mousePosition;
             _targetEuler = _followTransform.rotation.eulerAngles;
         }
 
         private void Update()
         {
             UpdateFollowPosition();
-            
-            Vector2 curMousePos = Input.mousePosition;
 
-            Vector2 delta = curMousePos - _prevMousePos;
+            float x = Input.GetAxis("Mouse X");
+            float y = Input.GetAxis("Mouse Y");
+            
+            Vector2 delta = new Vector2(x, y);
 
             delta = delta.normalized;
 
             _targetEuler += new Vector3(delta.y, delta.x, 0);
             _targetEuler.z = 0;
+            
             float angle = _targetEuler.x % 360;
 
             if (angle < 0)
             {
                 angle += 360;
             }
+            
             if (angle > 180 && angle < 360 + _minX)
             {
                 angle = _minX + 360;
@@ -78,8 +79,6 @@ namespace CharacterSystem
                 
                 _rotationBehaviour.Rotate(characterTarget);
             }
-            
-            _prevMousePos = curMousePos;
         }
 
         private void UpdateFollowPosition()
