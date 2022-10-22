@@ -1,22 +1,33 @@
+using Core.Common;
 using UnityEngine;
 
 namespace CharacterSystem
 {
     public class CharacterCameraController : MonoBehaviour
     {
+        [SerializeField] private RotationBehaviour_EulerAngles _rotationBehaviour = null;
+        
         [SerializeField] private Transform _followTransform = null;
 
         [SerializeField] private Transform _characterTransform = null;
+        
         [SerializeField] private Vector3 _offset = Vector3.up;
         
         [SerializeField] private float _minX = -20;
+        
         [SerializeField] private float _maxX = 50;
 
         private float _rotationSpeed = 250;
-
-        private Quaternion _nextRotation;
+        private bool _rotateCharacter = false;
         private Vector2 _prevMousePos = Vector2.zero;
 
+        private Quaternion _nextRotation;
+        
+        public void EnableCharacterRotation(bool enabled)
+        {
+            _rotateCharacter = enabled;
+        }
+        
         private void Awake()
         {
             _prevMousePos = Input.mousePosition;
@@ -61,7 +72,15 @@ namespace CharacterSystem
             Quaternion newRotation = Quaternion.Euler(targetEuler);
 
             _followTransform.rotation = newRotation;
-
+            
+            if (_rotateCharacter)
+            {
+                Vector3 characterTarget = targetEuler;
+                characterTarget.x = 0;
+                
+                _rotationBehaviour.Rotate(characterTarget);
+            }
+            
             _prevMousePos = curMousePos;
         }
 

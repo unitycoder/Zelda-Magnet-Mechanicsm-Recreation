@@ -2,6 +2,8 @@
 using Core.FSM;
 using UnityEngine;
 using System.Collections;
+using Core.CameraSystem;
+using Core.ServiceSystem;
 
 namespace MagnetSystem.MagnetFSM
 {
@@ -20,6 +22,8 @@ namespace MagnetSystem.MagnetFSM
 
         protected override void EnterStateCustomActions(MagnetFSMTransitionMessage transitionMessage = null)
         {
+            ServiceProvider.Get<CameraManager>().SetTransition(Constants.AimCam);
+
             StartMagneticObjectSearch();
             
             base.EnterStateCustomActions(transitionMessage);

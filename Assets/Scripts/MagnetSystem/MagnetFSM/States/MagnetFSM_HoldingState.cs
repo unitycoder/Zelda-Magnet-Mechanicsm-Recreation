@@ -1,9 +1,7 @@
-﻿using Core.CameraSystem;
+﻿using CharacterSystem;
 using Core.Common;
 using Core.FSM;
-using Core.ServiceSystem;
 using UnityEngine;
-using Util;
 
 namespace MagnetSystem.MagnetFSM
 {
@@ -21,14 +19,16 @@ namespace MagnetSystem.MagnetFSM
     {
         [SerializeField] private Magnet _magnet = null;
 
-        [SerializeField] private RotationBehaviour _rotationBehaviour = null;
+        [SerializeField] private RotationBehaviour_LookDir _rotationBehaviour = null;
+
+        [SerializeField] private CharacterCameraController _cameraController = null;
         
         public override EMagnetState GetStateType()
         {
             return EMagnetState.Holding;
         }
         
-        protected override void EnterStateCustomActions(MagnetFSMTransitionMessage transitionMessage = null)
+        protected override async void EnterStateCustomActions(MagnetFSMTransitionMessage transitionMessage = null)
         {
             MagnetFSMHoldingTransitionMessage holdingTransitionMessage =
                 (MagnetFSMHoldingTransitionMessage) transitionMessage;
@@ -41,18 +41,18 @@ namespace MagnetSystem.MagnetFSM
             }
 
             LookTowardsToObject(holdingTransitionMessage.MagneticObject.Transform.position);
+
+            await _magnet.AttachMagneticObject(holdingTransitionMessage.MagneticObject);
             
-            ServiceProvider.Get<CameraManager>().SetTransition(Constants.AimCam);
-
-            _rotationBehaviour.LockRotation(true);
-
-            _magnet.AttachMagneticObject(holdingTransitionMessage.MagneticObject);
+            _cameraController.EnableCharacterRotation(true);
             
             base.EnterStateCustomActions(transitionMessage);
         }
 
         protected override void ExitStateCustomActions()
         {
+            _cameraController.EnableCharacterRotation(false);
+         
             _rotationBehaviour.LockRotation(false);
             
             _magnet.DeattachMagneticObject();
@@ -66,6 +66,8 @@ namespace MagnetSystem.MagnetFSM
             direction.y = 0;
             
             _rotationBehaviour.Rotate(direction.normalized, false);
+            
+            _rotationBehaviour.LockRotation(true);
         }
     }
 }

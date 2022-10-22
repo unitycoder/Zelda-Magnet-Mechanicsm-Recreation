@@ -12,7 +12,7 @@ namespace CharacterSystem
         
         [SerializeField] private MoveBehaviour_CharacterController _moveBehaviour = null;
 
-        [SerializeField] private RotationBehaviour _rotationBehaviour = null;
+        [SerializeField] private RotationBehaviour_LookDir _rotationBehaviour = null;
 
         [SerializeField] private AnimationController _animationController = null;
 

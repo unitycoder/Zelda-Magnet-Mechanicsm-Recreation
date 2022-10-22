@@ -6,7 +6,7 @@ namespace Core.Common
     {
         Transform GetRotationBody();
         
-        void Rotate(Vector3 lookDir, bool smoothUpdate = true);
+        void Rotate(Vector3 eulerAngles, bool smoothUpdate = true);
         
         void LockRotation(bool value);
     }

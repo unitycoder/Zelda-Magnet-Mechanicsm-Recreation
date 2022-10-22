@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using Core.ServiceSystem;
 using Cysharp.Threading.Tasks;
 
 namespace MagnetSystem
@@ -15,12 +14,15 @@ namespace MagnetSystem
         
         private IMagneticObject _magneticObject;
     
-        private Vector3 _targetPosition;
         private Vector3 _velocity;
+        private Vector3 _targetPosition;
 
+        private Vector3 _previousMagnetPosition;
+        private Quaternion _previousMagnetRotation;
+        
         private IEnumerator _positionProgress;
         
-        public async void AttachMagneticObject(IMagneticObject magneticObject)
+        public async UniTask AttachMagneticObject(IMagneticObject magneticObject)
         {
             DeattachMagneticObject();
 
@@ -43,41 +45,60 @@ namespace MagnetSystem
                 return;
             }
 
+            #region Input Related
+
             if (Input.GetKey(KeyCode.J))
             {
-                UpdateTargetPosition(-transform.right);
+                UpdateTargetPositionDeltaSpeed(-transform.right);
             }
 
             if (Input.GetKey(KeyCode.L))
             {
-                UpdateTargetPosition(transform.right);
+                UpdateTargetPositionDeltaSpeed(transform.right);
             }
             
             if (Input.GetKey(KeyCode.I))
             {
-                UpdateTargetPosition(transform.up);
+                UpdateTargetPositionDeltaSpeed(transform.up);
             }
 
             if (Input.GetKey(KeyCode.K))
             {
-                UpdateTargetPosition(-transform.up);
+                UpdateTargetPositionDeltaSpeed(-transform.up);
             }
+
+            #endregion
+
+            /*
+            Vector3 deltaAngles = transform.rotation.eulerAngles - _previousMagnetRotation.eulerAngles;
+            Vector3 deltaMagPos = _magneticObject.Transform.position - transform.position;
+            Vector3 newDelta = Quaternion.Inverse(Quaternion.Euler(deltaAngles)) * deltaMagPos;
+            _targetPosition += newDelta;
+            */
         }
 
-        private void UpdateTargetPosition(Vector3 delta)
+        private void UpdateTargetPositionDeltaSpeed(Vector3 delta)
         {
             _targetPosition += delta * (_movementSpeed * Time.deltaTime);
+        }
+
+        private void ResetMagnetProperties()
+        {
+            _previousMagnetPosition = transform.position;
+            _previousMagnetRotation = transform.rotation;
         }
 
         private UniTask AttachingToMagneticObject()
         {
             _targetPosition = _magneticObject.Transform.position;
-            
+
             return UniTask.Delay((int) (_attachingDuration * 1000));
         }
 
         private void AttachedToMagneticObject()
         {
+            ResetMagnetProperties();
+            
             _positionProgress = UpdatePositionProgress();
 
             StartCoroutine(_positionProgress);

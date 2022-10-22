@@ -2,7 +2,7 @@
 
 namespace Core.Common
 {
-    public class RotationBehaviour : MonoBehaviour, IRotationBehaviour
+    public class RotationBehaviour_LookDir : MonoBehaviour, IRotationBehaviour
     {
         [SerializeField] private Transform _rotationTransform = null;
         
@@ -12,19 +12,19 @@ namespace Core.Common
 
         public Transform GetRotationBody() => _rotationTransform;
 
-        public void Rotate(Vector3 lookDir, bool smoothUpdate = true)
+        public void Rotate(Vector3 eulerAngles, bool smoothUpdate = true)
         {
             if (_locked)
             {
                 return;
             }
             
-            if (lookDir.magnitude == 0)
+            if (eulerAngles.magnitude == 0)
             {
                 return;
             }
             
-            Quaternion targetRot = Quaternion.LookRotation(lookDir, Vector3.up);
+            Quaternion targetRot = Quaternion.LookRotation(eulerAngles, Vector3.up);
             
             if (!smoothUpdate)
             {
