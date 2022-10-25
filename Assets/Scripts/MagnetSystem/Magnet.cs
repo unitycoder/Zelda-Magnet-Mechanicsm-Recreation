@@ -12,6 +12,8 @@ namespace MagnetSystem
     {
         [SerializeField] private float _attachingDuration = 0.25f;
 
+        [SerializeField] private MagnetLineController _lineController = null;
+        
         private float _distanceToCamera;
 
         private IMagneticObject _magneticObject;
@@ -37,6 +39,8 @@ namespace MagnetSystem
             {
                 _magneticObject.DeattachedFromMagnet();
             }
+
+            _lineController.DisableLineController();
             
             _magneticObject = null;
         }
@@ -78,6 +82,8 @@ namespace MagnetSystem
             #endregion
 
             UpdateMagneticObjectPosition();
+
+            _lineController.UpdateLine();
         }
 
         private void UpdateMagneticObjectPosition()
@@ -111,6 +117,8 @@ namespace MagnetSystem
             _distanceToCamera = (objectPosition - _cameraManager.MainCamera.ViewportToWorldPoint(Constants.AimPosition)).magnitude;
             
             _magneticObject.AttachedToMagnet(this);
+            
+            _lineController.EnableLineController(transform, _magneticObject);
         }
     }
 }

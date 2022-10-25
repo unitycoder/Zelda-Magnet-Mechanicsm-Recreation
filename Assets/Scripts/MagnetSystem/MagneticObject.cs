@@ -44,6 +44,11 @@ namespace MagnetSystem
             StopMovementRoutine();
         }
 
+        public Vector3 GetObjectVelocity()
+        {
+            return _velocity;
+        }
+
         private IEnumerator _movementRoutine;
         
         private void StartMovementRoutine()
