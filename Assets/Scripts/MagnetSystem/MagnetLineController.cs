@@ -1,4 +1,5 @@
 ﻿using Core.Bezier;
+using DG.Tweening;
 using UnityEngine;
 
 namespace MagnetSystem
@@ -28,6 +29,8 @@ namespace MagnetSystem
             
             _magnetTransform = magnetTransform;
             _magneticObject = magneticObject;
+
+            AnimateMagneticLineToObject();
         }
 
         public void DisableLineController()
@@ -40,15 +43,31 @@ namespace MagnetSystem
 
         public void UpdateLine()
         {
+            CalculateMagneticLine(_magneticObject.Transform.position, _magneticObject.GetObjectVelocity());
+        }
+
+        private void AnimateMagneticLineToObject()
+        {
+            Vector3 dir = _magneticObject.Transform.position - _magnetTransform.position;
+            
+            DOVirtual.Float(0, 1f, 0.25f, 
+                (value) =>
+            {
+                CalculateMagneticLine(_magnetTransform.position + value * dir, Vector3.zero);
+            });
+        }
+
+        private void CalculateMagneticLine(Vector3 endPosition, Vector3 velocity)
+        {
             _magneticLine[0] = _magnetTransform.position;
-            _magneticLine[3] = _magneticLine[0] + (_magneticObject.Transform.position - _magneticLine[0]) * _point3NormPos ;
+            _magneticLine[3] = _magneticLine[0] + (endPosition - _magneticLine[0]) * _point3NormPos;
 
             Vector3 dir = _magneticLine[3] - _magneticLine[0];
 
             _magneticLine[1] = _magneticLine[0] + dir * _point1NormPos;
 
             _magneticLine[2] = _magneticLine[0] + dir * _point2NormPos;
-            _magneticLine[2] += _speedCoefficient * _magneticObject.GetObjectVelocity();
+            _magneticLine[2] += _speedCoefficient * velocity;
             
             _bezierCurve.CalculateLine(_magneticLine);
 

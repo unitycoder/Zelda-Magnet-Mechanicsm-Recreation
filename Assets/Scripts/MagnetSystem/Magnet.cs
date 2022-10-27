@@ -13,7 +13,9 @@ namespace MagnetSystem
         [SerializeField] private float _attachingDuration = 0.25f;
 
         [SerializeField] private MagnetLineController _lineController = null;
-        
+
+        [SerializeField] private ParticleSystem _attachedVFX = null;
+
         private float _distanceToCamera;
 
         private IMagneticObject _magneticObject;
@@ -108,17 +110,21 @@ namespace MagnetSystem
         {
             magneticObject.AttachingToMagnet(this);
             
+            _lineController.EnableLineController(transform, magneticObject);
+            
             return UniTask.Delay(TimeSpan.FromSeconds(_attachingDuration));
         }
 
         private void AttachedToMagneticObject()
         {
             Vector3 objectPosition = _magneticObject.Transform.position;
+            
+            _attachedVFX.transform.position = objectPosition;
+            _attachedVFX.Play();
+            
             _distanceToCamera = (objectPosition - _cameraManager.MainCamera.ViewportToWorldPoint(Constants.AimPosition)).magnitude;
             
             _magneticObject.AttachedToMagnet(this);
-            
-            _lineController.EnableLineController(transform, _magneticObject);
         }
     }
 }
