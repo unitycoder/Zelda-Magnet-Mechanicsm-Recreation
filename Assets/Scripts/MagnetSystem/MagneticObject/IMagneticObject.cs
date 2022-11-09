@@ -12,7 +12,7 @@ namespace MagnetSystem
         
         void AttachedToMagnet(Magnet magnet);
 
-        void DeattachedFromMagnet();
+        void DetachedFromMagnet();
 
         Vector3 GetObjectVelocity();
     }

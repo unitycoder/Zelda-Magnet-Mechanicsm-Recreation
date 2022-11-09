@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 
 namespace MagnetSystem
@@ -16,14 +17,25 @@ namespace MagnetSystem
         private Vector3 _velocity;
         private Vector3 _targetPosition = Vector3.zero;
         
+        public Action OnAttaching { get; set; }
+        public Action OnAttached { get; set; }
+        public Action OnDetached { get; set; }
+        
         public void MoveMagneticObject(Vector3 deltaPos)
         {
+            if (deltaPos.magnitude < Mathf.Epsilon)
+            {
+                return;
+            }
+            
             _targetPosition += deltaPos * (_movementSpeed * Time.deltaTime);
         }
 
         public void AttachingToMagnet(Magnet magnet)
         {
             _velocity = Vector3.zero;
+            
+            OnAttaching?.Invoke();
         }
 
         public void AttachedToMagnet(Magnet magnet)
@@ -33,15 +45,19 @@ namespace MagnetSystem
             _targetPosition = transform.position;
 
             StartMovementRoutine();
+            
+            OnAttached?.Invoke();            
         }
 
-        public void DeattachedFromMagnet()
+        public void DetachedFromMagnet()
         {
             _rigidbody.useGravity = true;
             
             _rigidbody.AddForce(_velocity, ForceMode.VelocityChange);
             
             StopMovementRoutine();
+            
+            OnDetached?.Invoke();
         }
 
         public Vector3 GetObjectVelocity()

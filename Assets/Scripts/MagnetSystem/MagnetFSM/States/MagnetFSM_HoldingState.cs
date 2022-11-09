@@ -4,7 +4,7 @@ using Core.FSM;
 using UnityEngine;
 using Util;
 
-namespace MagnetSystem.MagnetFSM
+namespace MagnetSystem
 {
     public class MagnetFSMHoldingTransitionMessage : MagnetFSMTransitionMessage
     {

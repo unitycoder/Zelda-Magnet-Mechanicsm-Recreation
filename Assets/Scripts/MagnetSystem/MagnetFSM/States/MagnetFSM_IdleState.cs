@@ -3,7 +3,7 @@ using Core.FSM;
 using Core.ServiceSystem;
 using Util;
 
-namespace MagnetSystem.MagnetFSM
+namespace MagnetSystem
 {
     public class MagnetFSM_IdleState : FSMState<EMagnetState, MagnetFSMTransitionMessage>
     {

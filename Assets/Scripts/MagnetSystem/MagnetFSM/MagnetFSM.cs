@@ -1,11 +1,12 @@
 ﻿using Core.FSM;
+using Core.ServiceSystem;
 using System.Collections.Generic;
 
-namespace MagnetSystem.MagnetFSM
+namespace MagnetSystem
 {
     public class MagnetFSMTransitionMessage : FSMTransitionMessage { }
     
-    public class MagnetFSM : FSMBase<EMagnetState, MagnetFSMTransitionMessage>
+    public class MagnetFSM : FSMBase<EMagnetState, MagnetFSMTransitionMessage>, IService
     {
         private readonly IReadOnlyDictionary<EMagnetState, HashSet<EMagnetState>> _transitionMappings =
             new Dictionary<EMagnetState, HashSet<EMagnetState>>()

@@ -39,7 +39,7 @@ namespace MagnetSystem
         {
             if (_magneticObject != null)
             {
-                _magneticObject.DeattachedFromMagnet();
+                _magneticObject.DetachedFromMagnet();
             }
 
             _lineController.DisableLineController();

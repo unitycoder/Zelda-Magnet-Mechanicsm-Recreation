@@ -5,7 +5,7 @@ using System.Collections;
 using Core.CameraSystem;
 using Core.ServiceSystem;
 
-namespace MagnetSystem.MagnetFSM
+namespace MagnetSystem
 {
     public class MagnetFSM_ActiveState : FSMState<EMagnetState, MagnetFSMTransitionMessage>
     {

@@ -1,4 +1,4 @@
-﻿namespace MagnetSystem.MagnetFSM
+﻿namespace MagnetSystem
 {
     public enum EMagnetState
     {
