@@ -1,6 +1,6 @@
-# Zelda Magnet Mechanicsm
+# Zelda Magnesis Mechanicsm
 
-Recreation of Shilka Tablet Magnesis Rune mechanism. 
+Recreation of Sheikah Tablet Magnesis Rune mechanism
 
 ![Alt Text](https://github.com/bugrahanakbulut/Zelda-Magnet-Mechanicsm-Reecreation/blob/master/Resources/Demo.gif)
 
